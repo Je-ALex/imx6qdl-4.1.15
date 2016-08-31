@@ -208,7 +208,7 @@
 		compatible = "fsl,mxc_sdc_fb";
 		disp_dev = "lcd";
 		interface_pix_fmt = "RGB24";
-		mode_str ="AT403-WVGA";//alex
+		mode_str ="AT070-WVGA";//alex
 		default_bpp = <16>;
 		int_clk = <0>;
 		late_init = <0>;
@@ -457,10 +457,9 @@
 		compatible = "maxim,max11801";
 		reg = <0x48>;
 		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_i2c2_max11801_int>;
-		interrupt-parent = <&gpio3>;
+		interrupt-parent = <&gpio6>;
 		interrupts = <20 3>; //<26 2>
-		work-mode = <0>;/*DCM mode*/
+		work-mode = <0>;/*1 DCM mode  0 ACM mode*/
 	};
 
 
@@ -676,11 +675,6 @@
 		pinctrl_i2c2_egalax_int: egalax_i2c2_intgrp {
 			fsl,pins = <
 				MX6QDL_PAD_NANDF_ALE__GPIO6_IO08 0x80000000
-			>;
-		};
-		pinctrl_i2c2_max11801_int: max801_i2c2_intgrp {
-			fsl,pins = <
-				MX6QDL_PAD_EIM_D26__GPIO3_IO26 0x80000000
 			>;
 		};
 
