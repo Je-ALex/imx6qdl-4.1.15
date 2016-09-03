@@ -18,6 +18,14 @@ obj-$(CONFIG_LOGO_M32R_CLUT224)		+= logo_m32r_clut224.o
 
 obj-$(CONFIG_SPU_BASE)			+= logo_spe_clut224.o
 
+#alex
+obj-$(CONFIG_LOGO_HUSHAN_CLUT224)			+= logo_hushan_clut224.o
+obj-$(CONFIG_LOGO_HUSHAN_480x272_CLUT224)			+= logo_hushan_480x272_clut224.o
+obj-$(CONFIG_LOGO_HUSHAN_800x600_CLUT224)			+= logo_hushan_800x600_clut224.o
+
+#end
+
+
 # How to generate logo's
 
 # Use logo-cfiles to retrieve list of .c files to be built

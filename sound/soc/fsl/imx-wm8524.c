@@ -1,5 +1,5 @@
 /***********************************************************************
- * imx-wm8524.c
+ * imx-ti6748.c
  *
  * Copyright (C) 2013 Freescale Semiconductor, Inc. All Rights Reserved.
  *
@@ -11,7 +11,7 @@
  * http://www.opensource.org/licenses/gpl-license.html
  * http://www.gnu.org/copyleft/gpl.html
  **********************************************************************/
-//johnli
+
 #include <linux/module.h>
 #include <linux/of_platform.h>
 #include <linux/of_gpio.h>
@@ -41,7 +41,7 @@ struct imx_priv {
 	struct platform_device *pdev;
 };
 
-struct imx_wm8524_data {
+struct imx_ti6748_data {
 	struct snd_soc_dai_link dai;
 	struct snd_soc_card card;
 	char codec_dai_name[DAI_NAME_SIZE];
@@ -56,7 +56,6 @@ static struct snd_soc_card snd_soc_card_imx;
 static int imx_hifi_startup(struct snd_pcm_substream *substream)
 {
 
-
 	return 0;
 }
 
@@ -68,7 +67,7 @@ static void imx_hifi_shutdown(struct snd_pcm_substream *substream)
 static int imx_hifi_hw_params(struct snd_pcm_substream *substream,
 				     struct snd_pcm_hw_params *params)
 {
-	//6q is master
+
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
 	unsigned int channels = params_channels(params);
@@ -80,19 +79,24 @@ static int imx_hifi_hw_params(struct snd_pcm_substream *substream,
 				 channels == 1 ? 0xfffffffe : 0xfffffffc,
 				 channels == 1 ? 0xfffffffe : 0xfffffffc,
 				 2, 32);
+	//alex imx is master mode
 
 //	dai_format = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_IF |
 //		SND_SOC_DAIFMT_CBS_CFS;
 
+	//imx is slave mode
 	dai_format = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
 			SND_SOC_DAIFMT_CBM_CFM;
+	//end
+
 	/* set cpu DAI configuration */
 	ret = snd_soc_dai_set_fmt(cpu_dai, dai_format);
 	if (ret < 0)
 		return ret;
-#if 0 //johnli debug, bitclk set already
+
+#if 0  //bitclk set already
 	/* set the SSI system clock as input (unused) */
-       snd_soc_dai_set_sysclk(cpu_dai,  IMX_SSP_SYS_CLK, 0, SND_SOC_CLOCK_IN);
+	snd_soc_dai_set_sysclk(cpu_dai,  IMX_SSP_SYS_CLK, 0, SND_SOC_CLOCK_IN);
 
 	snd_soc_dai_set_clkdiv(cpu_dai, IMX_SSI_TX_DIV_PM, 3);
 	snd_soc_dai_set_clkdiv(cpu_dai, IMX_SSI_TX_DIV_2, 0);
@@ -101,12 +105,6 @@ static int imx_hifi_hw_params(struct snd_pcm_substream *substream,
 	return 0;
 
 }
-/*
-static int imx_wm8524_init(struct snd_soc_pcm_runtime *rtd)
-{
-	return 0;
-}
-*/
 
 static struct snd_soc_ops imx_hifi_ops = {
 	.startup   = imx_hifi_startup,
@@ -114,15 +112,14 @@ static struct snd_soc_ops imx_hifi_ops = {
 	.hw_params = imx_hifi_hw_params,
 };
 
-static struct platform_device *imx_snd_device;
 
-static int imx_wm8524_probe(struct platform_device *pdev)
+static int imx_ti6748_probe(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
 	struct device_node *cpu_np, *codec_np;
 	struct platform_device *cpu_pdev;
 	struct imx_priv *priv = &card_priv;
-     struct imx_wm8524_data *data;
+     struct imx_ti6748_data *data;
 	struct clk *codec_clk = NULL;
 	int int_port, ext_port;
 	int ret;
@@ -170,6 +167,7 @@ static int imx_wm8524_probe(struct platform_device *pdev)
 	imx_audmux_v2_configure_port(int_port,
 			IMX_AUDMUX_V2_PTCR_SYN,
 			IMX_AUDMUX_V2_PDCR_RXDSEL(ext_port));
+
 	if (ret) {
 		dev_err(&pdev->dev, "audmux external port setup failed\n");
 		return ret;
@@ -255,16 +253,16 @@ static const struct of_device_id imx_wm8524_dt_ids[] = {
 
 MODULE_DEVICE_TABLE(of, imx_wm8524_dt_ids);
 
-static struct platform_driver imx_wm8524_driver = {
+static struct platform_driver imx_ti6748_driver = {
 	.driver = {
 		.name = "imx-wm8524",
 		.owner = THIS_MODULE,
 		.of_match_table = imx_wm8524_dt_ids,
 	},
-	.probe = imx_wm8524_probe,
+	.probe = imx_ti6748_probe,
 	.remove = imx_wm8524_remove,
 };
-module_platform_driver(imx_wm8524_driver);
+module_platform_driver(imx_ti6748_driver);
 
 /* Module information */
 MODULE_DESCRIPTION("ALSA SoC imx wm8524");

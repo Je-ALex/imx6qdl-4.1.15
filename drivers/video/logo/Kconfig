@@ -81,5 +81,18 @@ config LOGO_M32R_CLUT224
 	bool "224-color M32R Linux logo"
 	depends on M32R
 	default y
+	
+#alex
+config LOGO_HUSHAN_CLUT224
+	bool "Hushan 80x60 Linux logo"
+	default y
 
+config LOGO_HUSHAN_800x600_CLUT224
+	bool "Hushan 800x600 Linux logo"
+	default y
+	
+config LOGO_HUSHAN_480x272_CLUT224
+	bool "Hushan 480x272 Linux logo"
+	default y
+	
 endif # LOGO

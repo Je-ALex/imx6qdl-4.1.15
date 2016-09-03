@@ -364,36 +364,36 @@ static void fbcon_update_softback(struct vc_data *vc)
 
 static void fb_flashcursor(struct work_struct *work)
 {
-	struct fb_info *info = container_of(work, struct fb_info, queue);
-	struct fbcon_ops *ops = info->fbcon_par;
-	struct vc_data *vc = NULL;
-	int c;
-	int mode;
-	int ret;
-
-	/* FIXME: we should sort out the unbind locking instead */
-	/* instead we just fail to flash the cursor if we can't get
-	 * the lock instead of blocking fbcon deinit */
-	ret = console_trylock();
-	if (ret == 0)
-		return;
-
-	if (ops && ops->currcon != -1)
-		vc = vc_cons[ops->currcon].d;
-
-	if (!vc || !CON_IS_VISIBLE(vc) ||
- 	    registered_fb[con2fb_map[vc->vc_num]] != info ||
-	    vc->vc_deccm != 1) {
-		console_unlock();
-		return;
-	}
-
-	c = scr_readw((u16 *) vc->vc_pos);
-	mode = (!ops->cursor_flash || ops->cursor_state.enable) ?
-		CM_ERASE : CM_DRAW;
-	ops->cursor(vc, info, mode, softback_lines, get_color(vc, info, c, 1),
-		    get_color(vc, info, c, 0));
-	console_unlock();
+//	struct fb_info *info = container_of(work, struct fb_info, queue);
+//	struct fbcon_ops *ops = info->fbcon_par;
+//	struct vc_data *vc = NULL;
+//	int c;
+//	int mode;
+//	int ret;
+//
+//	/* FIXME: we should sort out the unbind locking instead */
+//	/* instead we just fail to flash the cursor if we can't get
+//	 * the lock instead of blocking fbcon deinit */
+//	ret = console_trylock();
+//	if (ret == 0)
+//		return;
+//
+//	if (ops && ops->currcon != -1)
+//		vc = vc_cons[ops->currcon].d;
+//
+//	if (!vc || !CON_IS_VISIBLE(vc) ||
+// 	    registered_fb[con2fb_map[vc->vc_num]] != info ||
+//	    vc->vc_deccm != 1) {
+//		console_unlock();
+//		return;
+//	}
+//
+//	c = scr_readw((u16 *) vc->vc_pos);
+//	mode = (!ops->cursor_flash || ops->cursor_state.enable) ?
+//		CM_ERASE : CM_DRAW;
+//	ops->cursor(vc, info, mode, softback_lines, get_color(vc, info, c, 1),
+//		    get_color(vc, info, c, 0));
+//	console_unlock();
 }
 
 static void cursor_timer_handler(unsigned long dev_addr)
@@ -579,8 +579,10 @@ static void fbcon_prepare_logo(struct vc_data *vc, struct fb_info *info,
 	 */
 	if (fb_get_color_depth(&info->var, &info->fix) == 1)
 		erase &= ~0x400;
+
 	logo_height = fb_prepare_logo(info, ops->rotate);
 	logo_lines = DIV_ROUND_UP(logo_height, vc->vc_font.height);
+
 	q = (unsigned short *) (vc->vc_origin +
 				vc->vc_size_row * rows);
 	step = logo_lines * cols;
@@ -1301,31 +1303,31 @@ static void fbcon_clear_margins(struct vc_data *vc, int bottom_only)
 
 static void fbcon_cursor(struct vc_data *vc, int mode)
 {
-	struct fb_info *info = registered_fb[con2fb_map[vc->vc_num]];
-	struct fbcon_ops *ops = info->fbcon_par;
-	int y;
- 	int c = scr_readw((u16 *) vc->vc_pos);
-
-	if (fbcon_is_inactive(vc, info) || vc->vc_deccm != 1)
-		return;
-
-	if (vc->vc_cursor_type & 0x10)
-		fbcon_del_cursor_timer(info);
-	else
-		fbcon_add_cursor_timer(info);
-
-	ops->cursor_flash = (mode == CM_ERASE) ? 0 : 1;
-	if (mode & CM_SOFTBACK) {
-		mode &= ~CM_SOFTBACK;
-		y = softback_lines;
-	} else {
-		if (softback_lines)
-			fbcon_set_origin(vc);
-		y = 0;
-	}
-
-	ops->cursor(vc, info, mode, y, get_color(vc, info, c, 1),
-		    get_color(vc, info, c, 0));
+//	struct fb_info *info = registered_fb[con2fb_map[vc->vc_num]];
+//	struct fbcon_ops *ops = info->fbcon_par;
+//	int y;
+// 	int c = scr_readw((u16 *) vc->vc_pos);
+//
+//	if (fbcon_is_inactive(vc, info) || vc->vc_deccm != 1)
+//		return;
+//
+//	if (vc->vc_cursor_type & 0x10)
+//		fbcon_del_cursor_timer(info);
+//	else
+//		fbcon_add_cursor_timer(info);
+//
+//	ops->cursor_flash = (mode == CM_ERASE) ? 0 : 1;
+//	if (mode & CM_SOFTBACK) {
+//		mode &= ~CM_SOFTBACK;
+//		y = softback_lines;
+//	} else {
+//		if (softback_lines)
+//			fbcon_set_origin(vc);
+//		y = 0;
+//	}
+//
+//	ops->cursor(vc, info, mode, y, get_color(vc, info, c, 1),
+//		    get_color(vc, info, c, 0));
 }
 
 static int scrollback_phys_max = 0;

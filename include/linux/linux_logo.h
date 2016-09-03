@@ -48,6 +48,12 @@ extern const struct linux_logo logo_superh_clut224;
 extern const struct linux_logo logo_m32r_clut224;
 extern const struct linux_logo logo_spe_clut224;
 
+//alex
+extern const struct linux_logo logo_hushan_clut224;
+extern const struct linux_logo logo_hushan_480x272_clut224;
+extern const struct linux_logo logo_hushan_800x600_clut224;
+//end
+
 extern const struct linux_logo *fb_find_logo(int depth);
 #ifdef CONFIG_FB_LOGO_EXTRA
 extern void fb_append_extra_logo(const struct linux_logo *logo,

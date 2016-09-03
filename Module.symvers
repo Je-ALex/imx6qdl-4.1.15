@@ -1705,7 +1705,6 @@
 0x1e1745de	page_endio	vmlinux	EXPORT_SYMBOL_GPL
 0x8ddb469f	ip_getsockopt	vmlinux	EXPORT_SYMBOL
 0xe56dae15	blk_unprep_request	vmlinux	EXPORT_SYMBOL_GPL
-0x77c382fa	input_ff_create_memless	vmlinux	EXPORT_SYMBOL_GPL
 0x2e09263f	usb_copy_descriptors	drivers/usb/gadget/libcomposite	EXPORT_SYMBOL_GPL
 0x18e9736e	mmc_put_card	vmlinux	EXPORT_SYMBOL
 0x60a01ae6	xdr_shift_buf	vmlinux	EXPORT_SYMBOL_GPL

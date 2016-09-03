@@ -35,7 +35,10 @@
 
 #include <asm/fb.h>
 
-
+//alex
+#ifndef MID_0
+#define MID_
+#endif
     /*
      *  Frame buffer device initialization and setup routines
      */
@@ -419,16 +422,33 @@ static void fb_rotate_logo(struct fb_info *info, u8 *dst,
 
 	image->data = dst;
 }
-
+/*
+ * modify the display format to middle by alex
+ */
 static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
 			    int rotate, unsigned int num)
 {
 	unsigned int x;
 
+#ifdef MID_0
+	//alex add
+	unsigned int xoff,yoff;
+
+	xoff = (info->var.xres - num * (fb_logo.logo->width )) >> 1;
+	yoff = (info->var.yres - (fb_logo.logo->height )) >> 1;
+#endif
+
+
 	if (rotate == FB_ROTATE_UR) {
+#ifdef MID_0
+		//alex
+		image->dx = xoff;
+		image->dy = yoff;
+#endif
 		for (x = 0;
 		     x < num && image->dx + image->width <= info->var.xres;
 		     x++) {
+
 			info->fbops->fb_imageblit(info, image);
 			image->dx += image->width + 8;
 		}
@@ -500,6 +520,10 @@ static int fb_show_logo_line(struct fb_info *info, int rotate,
 
 	image.dx = 0;
 	image.dy = y;
+	//alex
+//	image.dx = (info->var.xres/2) - (image.width/2);    // line 500
+//	image.dy = (info->var.yres/2) - (image.height/2);
+
 	image.width = logo->width;
 	image.height = logo->height;
 
@@ -657,15 +681,33 @@ int fb_prepare_logo(struct fb_info *info, int rotate)
  		}
  	}
 
+
+#ifdef MID_0
+ 	return fb_prepare_extra_logos(info, fb_logo.logo->height, yres)+((info->var.yres )>>1);
+#else
 	return fb_prepare_extra_logos(info, fb_logo.logo->height, yres);
+#endif
+
+
+
+
 }
 
 int fb_show_logo(struct fb_info *info, int rotate)
 {
 	int y;
 
+	//alex logo number modify
+#ifdef MID_1
 	y = fb_show_logo_line(info, rotate, fb_logo.logo, 0,
-			      num_online_cpus());
+			      1);
+#else
+	y = fb_show_logo_line(info, rotate, fb_logo.logo, 0,
+				      num_online_cpus());
+#endif
+	y = fb_show_logo_line(info, rotate, fb_logo.logo, 0,
+			      1);
+
 	y = fb_show_extra_logos(info, y, rotate);
 
 	return y;

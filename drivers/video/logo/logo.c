@@ -111,6 +111,21 @@ const struct linux_logo * __init_refok fb_find_logo(int depth)
 		/* M32R Linux logo */
 		logo = &logo_m32r_clut224;
 #endif
+
+		//alex
+#ifdef CONFIG_LOGO_HUSHAN_CLUT224
+		/* husahn Linux logo */
+		logo = &logo_hushan_clut224;
+#endif
+#ifdef CONFIG_LOGO_HUSHAN_800x600_CLUT224
+		/* husahn Linux logo */
+		logo = &logo_hushan_800x600_clut224;
+#endif
+#ifdef CONFIG_LOGO_HUSHAN_480x272_CLUT224
+		/* husahn Linux logo */
+		logo = &logo_hushan_480x272_clut224;
+#endif
+		//end
 	}
 	return logo;
 }
