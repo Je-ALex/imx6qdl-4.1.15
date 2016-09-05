@@ -59,7 +59,9 @@ snd-soc-imx-es8328-objs := imx-es8328.o
 snd-soc-imx-cs42888-objs := imx-cs42888.o
 snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
 snd-soc-imx-wm8958-objs := imx-wm8958.o
-snd-soc-imx-wm8524-objs := imx-wm8524.o
+#alex
+snd-soc-imx-ti6748-objs := imx-ti6748.o
+
 snd-soc-imx-wm8960-objs := imx-wm8960.o
 snd-soc-imx-wm8962-objs := imx-wm8962.o
 snd-soc-imx-sii902x-objs := imx-sii902x.o
@@ -77,7 +79,9 @@ obj-$(CONFIG_SND_SOC_IMX_ES8328) += snd-soc-imx-es8328.o
 obj-$(CONFIG_SND_SOC_IMX_CS42888) += snd-soc-imx-cs42888.o
 obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
 obj-${CONFIG_SND_SOC_IMX_WM8958} += snd-soc-imx-wm8958.o
-obj-$(CONFIG_SND_SOC_IMX_WM8524) += snd-soc-imx-wm8524.o
+#alex
+obj-$(CONFIG_SND_SOC_IMX_TI6748) += snd-soc-imx-ti6748.o
+
 obj-$(CONFIG_SND_SOC_IMX_WM8960) += snd-soc-imx-wm8960.o
 obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
 obj-$(CONFIG_SND_SOC_IMX_SII902X) += snd-soc-imx-sii902x.o

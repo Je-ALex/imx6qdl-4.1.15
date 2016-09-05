@@ -183,18 +183,17 @@
 	};
 */
 	sound {
-		compatible = "fsl,imx6q-sabresd-wm8524",
-			   "fsl,imx-audio-wm8524";
-		model = "wm8524-audio";
+		compatible = "fsl,imx6q-sabresd-ti6748",
+			   "fsl,imx-audio-ti6748";
+		model = "ti6748-audio";
 		cpu-dai = <&ssi2>;
-		audio-codec = <&codec_wm8524>;
+		audio-codec = <&codec_ti6748>;
 		mux-int-port = <2>;
 		mux-ext-port = <3>; 
 	};
 
-	codec_wm8524: wm8524{
-		compatible = "wlf,wm8524";
-		// clocks = <&clks 201>;
+	codec_ti6748: ti6748{
+		compatible = "ti,ti6748";
         };
         
 	sound-hdmi {
@@ -1051,6 +1050,7 @@
                                <24576000>;
 	fsl,mode = "i2s-master";
 	*/
+	fsl,mode = "i2s-slave";
 	status = "okay";
 };
 

@@ -250,16 +250,6 @@ config SND_SOC_IMX_WM8960
 	  Say Y if you want to add support for SoC audio on an i.MX board with
 	  a wm8960 codec.
 	  
-config SND_SOC_IMX_WM8524
-	tristate "SoC Audio support for i.MX boards with wm8524"
-	select SND_SOC_WM8524
-	select SND_SOC_IMX_PCM_DMA
-	select SND_SOC_IMX_AUDMUX
-	select SND_SOC_FSL_SSI
-	help
-	  Say Y if you want to add support for SoC audio on an i.MX board with
-	  a wm8524 codec.
-	  
 config SND_SOC_IMX_SII902X
 	tristate "SoC Audio support for i.MX boards with sii902x"
 	depends on OF && I2C
@@ -401,7 +391,18 @@ config SND_SOC_IMX_HDMI
 	  SoC Audio support for i.MX boards with HDMI audio
 	  Say Y if you want to add support for SoC audio on an i.MX board with
 	  IMX HDMI.
-
+	  
+config SND_SOC_IMX_TI6748
+	tristate "SoC Audio support for i.MX boards with ti6748"
+	select SND_SOC_TI6748
+	select SND_SOC_IMX_PCM_DMA
+	select SND_SOC_IMX_AUDMUX
+	select SND_SOC_FSL_SSI
+	help
+	  Say Y if you want to add support for SoC audio on an i.MX board with
+	  a ti6748 dsp.
+	  
+	  
 endif # SND_IMX_SOC
 
 endmenu
