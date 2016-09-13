@@ -75,11 +75,18 @@ static int imx_hifi_hw_params(struct snd_pcm_substream *substream,
 	u32 dai_format;
 
 	/* set i.MX active slot mask */
-	snd_soc_dai_set_tdm_slot(cpu_dai,
-				 channels == 1 ? 0xfffffffe : 0xfffffffc,
-				 channels == 1 ? 0xfffffffe : 0xfffffffc,
-				 2, 32);
-
+//	snd_soc_dai_set_tdm_slot(cpu_dai,
+//				 channels == 1 ? 0xfffffffe : 0xfffffffc,
+//				 channels == 1 ? 0xfffffffe : 0xfffffffc,
+//				 2, 32);
+	ret = snd_soc_dai_set_tdm_slot(cpu_dai,
+			channels == 1 ? 1 : 0x3,
+			channels == 1 ? 1 : 0x3,
+			2, 32);
+	if (ret) {
+		dev_err(rtd->dev, "failed to set cpu dai tdm slot: %d\n", ret);
+		return ret;
+	}
 #ifdef FSL_MASTER
 	//alex imx is master mode
 	dai_format = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_IF |
@@ -119,7 +126,7 @@ static struct snd_soc_ops imx_hifi_ops = {
 static int imx_ti6748_probe(struct platform_device *pdev)
 {
 	struct device_node *np = pdev->dev.of_node;
-	struct device_node *cpu_np, *codec_np;
+	struct device_node *cpu_np, *codec_np = NULL;
 	struct platform_device *cpu_pdev;
 	struct imx_priv *priv = &card_priv;
     struct imx_ti6748_data *data;
@@ -137,8 +144,10 @@ static int imx_ti6748_probe(struct platform_device *pdev)
 	}
 
 	if (!strstr(cpu_np->name, "ssi"))
+	{
+		printk("alex: not find the config ssi");
 		goto audmux_bypass;
-
+	}
 	//get the ssi interface info
 	ret = of_property_read_u32(np, "mux-int-port", &int_port);
 	if (ret) {
@@ -237,14 +246,16 @@ audmux_bypass:
 			    SND_SOC_DAIFMT_CBM_CFM;
 #endif
 
+	data->card.num_links = 1;
 	data->card.dev = &pdev->dev;
 	ret = snd_soc_of_parse_card_name(&data->card, "model");
 	if (ret)
 		goto fail;
-
-	data->card.num_links = 1;
-	data->card.dai_link = &data->dai;
+//	ret = snd_soc_of_parse_audio_routing(&data->card, "audio-routing");
+//	if (ret)
+//		goto fail;
 	data->card.owner = THIS_MODULE;
+	data->card.dai_link = &data->dai;
 
 	platform_set_drvdata(pdev, &data->card);
 	snd_soc_card_set_drvdata(&data->card, data);
@@ -279,24 +290,21 @@ static const struct of_device_id imx_ti6748_dt_ids[] = {
 	{ .compatible = "fsl,imx-audio-ti6748", },
 	{ /* sentinel */ }
 };
-
 MODULE_DEVICE_TABLE(of, imx_ti6748_dt_ids);
 
 static struct platform_driver imx_ti6748_driver = {
-
 	.driver = {
 		.name = "imx-ti6748",
+		.pm = &snd_soc_pm_ops,
 		.of_match_table = imx_ti6748_dt_ids,
 	},
 	.probe = imx_ti6748_probe,
 	.remove = imx_ti6748_remove,
-};
 
+};
 module_platform_driver(imx_ti6748_driver);
 
-/* Module information */
 MODULE_AUTHOR("Hushan electronic, Inc.");
 MODULE_DESCRIPTION("Freescale i.MX TI6748 ASoC machine driver");
 MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:imx-ti6748");
-

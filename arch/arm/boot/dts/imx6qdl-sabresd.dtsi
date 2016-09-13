@@ -182,17 +182,18 @@
 		mic-det-gpios = <&gpio1 9 1>;
 	};
 */
+	//alex add
 	sound {
 		compatible = "fsl,imx6q-sabresd-ti6748",
 			   "fsl,imx-audio-ti6748";
 		model = "ti6748-audio";
 		cpu-dai = <&ssi2>;
-		audio-codec = <&codec_ti6748>;
+		audio-codec = <&codec>;
 		mux-int-port = <2>;
 		mux-ext-port = <3>; 
-	};
+		};
 
-	codec_ti6748: ti6748{
+	codec: ti6748{
 		compatible = "ti,ti6748";
         };
         
@@ -207,21 +208,13 @@
 		compatible = "fsl,mxc_sdc_fb";
 		disp_dev = "lcd";
 		interface_pix_fmt = "RGB24";
-		mode_str ="AT403-WVGA";//alex
+		mode_str ="AT403-WVGA";
 		default_bpp = <16>;
 		int_clk = <0>;
 		late_init = <0>;
 		status = "disabled";
 	};
-	lcd@0 {
-		compatible = "fsl,lcd";
-		ipu_id = <0>;
-		disp_id = <0>;
-		default_ifmt = "RGB24";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_ipu1>;
-		status = "okay";
-	};
+
 	mxcfb2: fb@1 {
 		compatible = "fsl,mxc_sdc_fb";
 		disp_dev = "hdmi";
@@ -235,10 +228,10 @@
 
 	mxcfb3: fb@2 {
 		compatible = "fsl,mxc_sdc_fb";
-		disp_dev = "ldb";
-		interface_pix_fmt = "RGB666";
-		//mode_str ="CLAA-WVGA";//alex modify
-		default_bpp = <16>;
+		disp_dev = "lcd";
+		interface_pix_fmt = "RGB24";
+		mode_str ="CLAA-WVGA";
+		default_bpp = <24>;
 		int_clk = <0>;
 		late_init = <0>;
 		status = "disabled";
@@ -254,6 +247,16 @@
 		status = "disabled";
 	};
 
+	lcd@0 {
+		compatible = "fsl,lcd";
+		ipu_id = <0>;
+		disp_id = <0>;
+		default_ifmt = "RGB24";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_ipu1>;
+		status = "okay";
+	};
+	
 	backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pwm1 0 5000000>;
@@ -360,7 +363,7 @@
 
 &hdmi_core {
 	ipu_id = <0>;
-	disp_id = <0>;
+	disp_id = <1>;
 	status = "okay";
 };
 
@@ -652,7 +655,7 @@
 				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16 0x80000000
 			>;
 		};
-
+	
 		pinctrl_audmux: audmuxgrp {
 			fsl,pins = <
 				MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
@@ -995,62 +998,9 @@
 &snvs_poweroff {
 	status = "okay";
 };
-/*
-&ssi2 {
-	status = "okay";
-};
-*/
-&ssi2 {
-/*
-	assigned-clocks = <&clks IMX6QDL_CLK_SSI2_SEL>;
-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>;
-	assigned-clock-rates = <24576000>;
 
-	assigned-clocks = <&clks IMX6QDL_PLL4_BYPASS_SRC>,
-                          <&clks IMX6QDL_CLK_PLL4>,
-			  <&clks IMX6QDL_PLL4_BYPASS>,
-                          <&clks IMX6QDL_CLK_PLL4_AUDIO>,
-			  <&clks IMX6QDL_CLK_PLL4_POST_DIV>,
-                          <&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>,
-                          <&clks IMX6QDL_CLK_SSI2_SEL>,
-                          <&clks IMX6QDL_CLK_SSI2_PRED>,
-                          <&clks IMX6QDL_CLK_SSI2_PODF>,
-                          <&clks IMX6QDL_CLK_SSI2>,
-                          <&clks IMX6QDL_CLK_CKO2_SEL>,
-                          <&clks IMX6QDL_CLK_CKO2_PODF>,
-                          <&clks IMX6QDL_CLK_CKO2>,
-                          <&clks IMX6QDL_CLK_CKO>;
-	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>,
-                          <&clks IMX6QDL_PLL4_BYPASS_SRC>,
-			  <&clks IMX6QDL_CLK_PLL4>,
-			  <&clks IMX6QDL_PLL4_BYPASS>,
-                          <&clks IMX6QDL_CLK_PLL4_AUDIO>,
-			  <&clks IMX6QDL_CLK_PLL4_POST_DIV>,
-                          <&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>,
-                          <&clks IMX6QDL_CLK_SSI2_SEL>,
-                          <&clks IMX6QDL_CLK_SSI2_PRED>,
-                          <&clks IMX6QDL_CLK_SSI2_PODF>,
-                          <&clks IMX6QDL_CLK_SSI2>,
-                          <&clks IMX6QDL_CLK_CKO2_SEL>,
-                          <&clks IMX6QDL_CLK_CKO2_PODF>,
-                          <&clks IMX6QDL_CLK_CKO2>;
-        assigned-clock-rates = <24000000>, 
-                               <1179648000>, 
-                               <1179648000>,
-                               <1179648000>,
-                               <589824000>, 
-                               <589824000>, 
-                               <589824000>,
-                               <147456000>,
-                               <24576000>, 
-                               <24576000>, 
-                               <24576000>,
-                               <24576000>,
-                               <24576000>, 
-                               <24576000>;
-	fsl,mode = "i2s-master";
-	*/
-	fsl,mode = "i2s-slave";
+&ssi2 {
+
 	status = "okay";
 };
 
